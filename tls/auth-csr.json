@@ -1,0 +1,16 @@
+{
+    "CN": "oidc-reader",
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "Latvia",
+            "ST": "Latvia",
+            "L": "Riga",
+            "O": "Home",
+            "OU": "DevOps"
+        }
+    ]
+}

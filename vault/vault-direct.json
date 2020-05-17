@@ -1,0 +1,36 @@
+{
+    "api_addr": "https://vault-server:8200",
+    "cluster_addr": "https://vault-server:8201",
+    "listener": [
+        {
+            "tcp": {
+                "address": "0.0.0.0:8200",
+                "tls_disable": "false",
+                "tls_cert_file": "/vault/ca/vault-combined.pem",
+                "tls_key_file": "/vault/ca/vault-key.pem"
+            }
+        },
+        {
+            "tcp": {
+                "address": "0.0.0.0:8202",
+                "tls_disable": "true"
+            }
+        }
+    ],
+    "storage": {
+        "consul": {
+            "address": "consul-server:8500",
+            "scheme": "https",
+            "path": "vault/",
+            "disable_registration": "false",
+            "tls_ca_file": "/vault/ca/ca.pem",
+            "tls_cert_file": "/vault/ca/consul.pem",
+            "tls_key_file": "/vault/ca/consul-key.pem",
+            "max_parallel": "10"
+        }
+    },
+    "default_lease_ttl": "168h",
+    "max_lease_ttl": "168h",
+    "disable_mlock": true,
+    "ui": true
+}

@@ -1,0 +1,22 @@
+{
+    "CN": "consul-client",
+    "hosts": [
+        "vault-server",
+        "*.dc1.consul",
+        "localhost",
+        "127.0.0.1"
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "Latvia",
+            "ST": "Latvia",
+            "L": "Riga",
+            "O": "Home",
+            "OU": "DevOps"
+        }
+    ]
+}

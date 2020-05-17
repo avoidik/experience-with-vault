@@ -1,0 +1,113 @@
+version: "2"
+
+services:
+
+  postgres:
+    build: pgsql
+    restart: on-failure
+    environment:
+      POSTGRES_USER: "power"
+      POSTGRES_PASSWORD: "power"
+    ports:
+      - "5432:5432"
+
+  openldap:
+    build: ldap
+    restart: on-failure
+    ports:
+      - "389:389"
+      - "636:636"
+    environment:
+      LDAP_ORGANISATION: "contoso"
+      LDAP_DOMAIN: "contoso.com"
+      LDAP_BASE_DN: ""
+      LDAP_ADMIN_PASSWORD: "admin"
+      LDAP_CONFIG_PASSWORD: "config"
+      LDAP_RFC2307BIS_SCHEMA: "false"
+      LDAP_BACKEND: "mdb"
+      LDAP_TLS: "true"
+      LDAP_TLS_CRT_FILENAME: "ldap.pem"
+      LDAP_TLS_KEY_FILENAME: "ldap-key.pem"
+      LDAP_TLS_CA_CRT_FILENAME: "ca.pem"
+      LDAP_TLS_VERIFY_CLIENT: "try"
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: "readonly"
+      LDAP_READONLY_USER_PASSWORD: "readonly"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+      KEEP_EXISTING_CONFIG: "false"
+      LDAP_REPLICATION: "false"
+      LDAP_TLS_ENFORCE: "false"
+
+  phpldapadmin:
+    build: ldapadmin
+    restart: on-failure
+    ports:
+      - "8082:443"
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "openldap"
+      PHPLDAPADMIN_HTTPS: "true"
+      PHPLDAPADMIN_HTTPS_CRT_FILENAME: "ldapadmin.pem"
+      PHPLDAPADMIN_HTTPS_KEY_FILENAME: "ldapadmin-key.pem"
+      PHPLDAPADMIN_HTTPS_CA_CRT_FILENAME: "ca.pem"
+      PHPLDAPADMIN_LDAP_CLIENT_TLS: "true"
+      PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: "try"
+      PHPLDAPADMIN_LDAP_CLIENT_TLS_CA_CRT_FILENAME: "ca.pem"
+    depends_on:
+      - openldap
+
+  ldapssp:
+    build: ldapssp
+    restart: on-failure
+    ports:
+      - "8083:80"
+    environment:
+      LDAP_SERVER: "ldaps://openldap"
+      LDAP_BINDDN: "cn=admin,dc=contoso,dc=com"
+      LDAP_BINDPASS: "admin"
+      LDAP_BASE_SEARCH: "ou=People,dc=contoso,dc=com"
+      LDAP_LOGIN_ATTRIBUTE: "cn"
+      LDAP_FULLNAME_ATTRIBUTE: "cn"
+      LDAP_MAIL_ATTRIBUTE: "mail"
+      PASSWORD_HASH: "SSHA"
+      QUESTIONS_ENABLED: "false"
+      USE_TOKENS: "false"
+      SECRETEKEY: "secretkey"
+      DEFAULT_ACTION: "change"
+      LANG: "en"
+      SHOW_HELP: "false"
+      SHOW_MENU: "false"
+      SKIP_MAIL: "true"
+      LOGO: ""
+    depends_on:
+      - openldap
+
+  dexidp:
+    build: dexidp
+    restart: on-failure
+    ports:
+      - "5556:5556"
+    depends_on:
+      - postgres
+      - openldap
+
+  consul-server:
+    build: consul
+    restart: on-failure
+    ports:
+      - "8502:8502"
+      - "8500:8500"
+    environment:
+      CONSUL_DISABLE_PERM_MGMT: ""
+
+  vault-server:
+    build: vault
+    restart: on-failure
+    ports:
+      - "8200:8200"
+      - "8202:8202"
+    cap_add:
+      - IPC_LOCK
+    depends_on:
+      - consul-server
+      - openldap
+      - dexidp

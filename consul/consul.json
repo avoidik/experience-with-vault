@@ -1,0 +1,32 @@
+{
+    "bind_addr": "0.0.0.0",
+    "client_addr": "0.0.0.0",
+    "ca_file": "/consul/ca/ca.pem",
+    "cert_file": "/consul/ca/consul.pem",
+    "key_file": "/consul/ca/consul-key.pem",
+    "verify_incoming_https": false,
+    "verify_incoming_rpc": true,
+    "verify_outgoing": true,
+    "verify_server_hostname": true,
+    "disable_anonymous_signature": true,
+    "disable_update_check": true,
+    "raft_protocol": 3,
+    "disable_keyring_file": true,
+    "disable_remote_exec": true,
+    "ports": {
+        "http": 8502,
+        "https": 8500,
+        "dns": -1
+    },
+    "bootstrap_expect": 1,
+    "server": true,
+    "ui": true,
+    "datacenter": "dc1",
+    "primary_datacenter": "dc1",
+    "acl": {
+        "enabled": false
+    },
+    "limits": {
+        "http_max_conns_per_client": 10
+    }
+}

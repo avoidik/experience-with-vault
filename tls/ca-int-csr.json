@@ -1,0 +1,21 @@
+{
+    "CN": "Test Intermediate PKI",
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "ca": {
+        "expiry": "720h",
+        "pathlen": 0,
+        "pathlenzero": true
+    },
+    "names": [
+        {
+            "C": "Latvia",
+            "ST": "Latvia",
+            "L": "Riga",
+            "O": "Home",
+            "OU": "DevOps"
+        }
+    ]
+}

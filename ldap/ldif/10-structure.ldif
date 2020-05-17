@@ -1,0 +1,50 @@
+dn: cn=vault,{{ LDAP_BASE_DN }}
+cn: vault
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+userPassword: vault
+description: Vault LDAP user
+
+dn: ou=People,{{ LDAP_BASE_DN }}
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Groups,{{ LDAP_BASE_DN }}
+objectClass: organizationalUnit
+ou: Groups
+
+dn: cn=jane,ou=People,{{ LDAP_BASE_DN }}
+objectClass: person
+objectClass: inetOrgPerson
+sn: doe
+cn: jane
+mail: janedoe@contoso.com
+userpassword: foo
+
+dn: cn=john,ou=People,{{ LDAP_BASE_DN }}
+objectClass: person
+objectClass: inetOrgPerson
+sn: doe
+cn: john
+mail: johndoe@contoso.com
+userpassword: bar
+
+dn: cn=carl,ou=People,{{ LDAP_BASE_DN }}
+objectClass: person
+objectClass: inetOrgPerson
+sn: doe
+cn: carl
+mail: carldoe@contoso.com
+userpassword: baz
+
+dn: cn=admins,ou=Groups,{{ LDAP_BASE_DN }}
+objectClass: groupOfUniqueNames
+cn: admins
+uniqueMember: cn=john,ou=People,{{ LDAP_BASE_DN }}
+uniqueMember: cn=jane,ou=People,{{ LDAP_BASE_DN }}
+
+dn: cn=developers,ou=Groups,{{ LDAP_BASE_DN }}
+objectClass: groupOfUniqueNames
+cn: developers
+uniqueMember: cn=jane,ou=People,{{ LDAP_BASE_DN }}
+uniqueMember: cn=carl,ou=People,{{ LDAP_BASE_DN }}

@@ -1,0 +1,11 @@
+tls/*.pem
+tls/*.csr
+consul/tls/*.pem
+vault/tls-vault/*.pem
+vault/tls-consul/*.pem
+dexidp/tls/*.pem
+ldap/tls/*.pem
+ldapadmin/tls/*.pem
+ldapssp/tls/*.pem
+init.json
+dexidp/config.yaml
