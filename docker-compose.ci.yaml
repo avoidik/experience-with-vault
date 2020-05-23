@@ -64,6 +64,8 @@ services:
     depends_on:
       - postgres
       - vault-server
+      - dexidp
+      - openldap
 
   concourse-worker-a:
     build: ci

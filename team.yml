@@ -1,0 +1,16 @@
+roles:
+- name: owner
+  ldap:
+    groups: ["admins"]
+  oidc:
+    groups: ["admins"]
+- name: member
+  ldap:
+    groups: ["developers"]
+  oidc:
+    groups: ["developers"]
+- name: viewer
+  oidc:
+    users: ["carldoe@contoso.com"]
+  ldap:
+    users: ["carl"]

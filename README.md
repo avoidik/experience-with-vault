@@ -42,40 +42,35 @@ Just follow along from top to bottom:
 1. `./oidc_auth.sh` - configure OIDC authenticaion
 1. `./entity.sh` - configure identity groups
 1. `./ldap_auth.sh` - configure LDAP authenticaion
-1. `./ldap_secrets.sh` - configure LDAP secrets (take a look on dynamically generated carl credentials)
+1. `./ldap_secrets.sh` - configure LDAP secrets (take a look on dynamically generated credentials for Carl)
 1. `./kv.sh` - configure KV secrets
 
-## How to start CI
+## How to test PKI
 
-1. `./run_ci.sh` - start Concourse CI server (login via OpenLDAP, OIDC, or static credentials)
-
-*It will not work without initializing, unsealing and configuring Vault and related authentication services (LDAP, DEX), hence `./run.sh` must be executed before*
-
-## How to interact with DEX
-
-1. `./dex.sh` - view DEX configuration
-1. `./login_dex.sh` - retrieve JWT token from DEX
-1. `./login_dex_public.sh` - retrive JWT token from DEX (if Public Client configured)
+1. `./pki_auth.sh` - configure PKI authenticaion & login with cfssl generate certificate
+1. `./pki_secrets.sh` - configure PKI secrets, generate TLS authenticaion certificate, and login with it (login with Vault generated PKI certificate into Vault)
 
 ## How to test OIDC and LDAP
 
 1. `source ./vault.env` - inject required environment variables
 1. `vault login -method=oidc role=oidc-reader` - login with OIDC (and LDAP as identities directory)
-1. `vault login -method=ldap username=carl` - login with LDAP (by using carl's dynamically generated credentials)
+1. `vault login -method=ldap username=carl` - login with LDAP (by using Carl's dynamically generated credentials)
+
+## How to start CI
+
+1. `./run_ci.sh` - start Concourse CI server (login via OpenLDAP, OIDC, or static credentials)
+1. `./team.sh` - set demo team in Concourse
+
+*It will not work without initializing, unsealing and configuring Vault and related authentication services (LDAP, DEX), hence `./run.sh` and all associated scripts must be executed before*
 
 ## How to test Postgres
 
 1. `./postgres_secrets.sh` - configure database secrets (Postgres)
 1. `./postgres_roles.sh` - configure database roles (Postgres)
 
-## How to tesk PKI
-
-1. `./pki_auth.sh` - configure PKI authenticaion & login with cfssl generate certificate
-1. `./pki_secrets.sh` - configure PKI secrets, generate TLS authenticaion certificate, and login with it (login with Vault generated PKI certificate into Vault)
-
 ## How to elevate identity entity
 
-1. `./carl.sh` - an example on how to elevate someone having access to identity
+1. `./carl.sh` - an example on how to elevate someone having access to identity backend
 1. `./uncarl.sh` - take elevated privileges back
 
 ## How to read from Consul
@@ -83,6 +78,12 @@ Just follow along from top to bottom:
 1. `source ./consul.env` - inject required environment variables
 1. `consul kv get -keys -recurse vault/core/` - list consul keys
 1. `consul kv get vault/core/lock` - read consul key
+
+## How to interact with DEX
+
+1. `./dex.sh` - view DEX configuration
+1. `./login_dex.sh` - retrieve JWT token from DEX
+1. `./login_dex_public.sh` - retrive JWT token from DEX (if Public Client configured)
 
 ## How to stop
 
@@ -99,7 +100,7 @@ Please consider reviewing configuration and processes provided in this repositor
 Found something interesting and want to reuse it in your own project? Please give proper credits to HashiCorp, Concourse CI, Docker-Containers maintainers, OSS authors, and me **Viacheslav** :-)
 
 - [HashiCorp](https://www.hashicorp.com/) ([Consul](https://www.consul.io/) & [Vault](https://www.vaultproject.io/)), respective [Vault Docker Container](https://hub.docker.com/_/vault) and [Consul Docker Container](https://hub.docker.com/_/consul)
-- [Concourse CI](https://concourse-ci.org/) and [Concourse CI Container](https://hub.docker.com/r/concourse/concourse)
+- [Concourse CI](https://concourse-ci.org/) and respective [Concourse CI Container](https://hub.docker.com/r/concourse/concourse)
 - [DEX](https://github.com/dexidp/dex) and respective [Docker Container](https://quay.io/repository/dexidp/dex)
 - [LDAP Self-Service Portal](https://ltb-project.org/documentation/self-service-password) and respective [Docker Container](https://hub.docker.com/r/tiredofit/self-service-password)
 - [phpLDAPadmin](http://phpldapadmin.sourceforge.net/wiki/index.php/Main_Page) and respective [Docker Container](https://hub.docker.com/r/osixia/phpmyadmin)

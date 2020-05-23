@@ -1,0 +1,20 @@
+---
+jobs:
+- name: first-step
+  plan:
+  - task: first-task
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: alpine }
+      params:
+        VAULT_USERNAME: ((credentials.username))
+        VAULT_PASSWORD: ((credentials.password))
+      run:
+        path: sh
+        args:
+        - -ec
+        - |
+          echo "Username is $VAULT_USERNAME"
+          echo "Password is $VAULT_PASSWORD"
