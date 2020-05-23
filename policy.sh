@@ -19,3 +19,9 @@ path "secret/team/*" {
   capabilities = ["read", "list"]
 }
 EOF
+
+vault policy write concourse-read-only -<<'EOF'
+path "concourse/*" {
+  capabilities = ["read"]
+}
+EOF

@@ -2,6 +2,12 @@
 
 set -e
 
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    CREATE USER concourse WITH ENCRYPTED PASSWORD 'concourse';
+    CREATE DATABASE concourse;
+    GRANT ALL PRIVILEGES ON DATABASE concourse TO concourse;
+EOSQL
+
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-'EOSQL'
     CREATE USER dex WITH ENCRYPTED PASSWORD 'dex';
     CREATE DATABASE dex;

@@ -82,7 +82,11 @@ services:
       - openldap
 
   dexidp:
-    build: dexidp
+    build:
+      context: dexidp
+      args:
+        ISSUER_URL: "${ENV_ISSUER_URL}"
+        MACHINE_IP: "${ENV_MACHINE_IP}"
     restart: on-failure
     ports:
       - "5556:5556"

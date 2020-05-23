@@ -24,4 +24,4 @@ curl -s --cacert tls/ca.pem \
 -d 'client_id=vault' \
 -d 'client_secret=vault' \
 -X POST "https://${MACHINE_IP}:5556/dex/token" | \
-jq -r '.id_token' | cut -d '.' -f 2 | base64 -di
+jq -r '.id_token' | cut -d '.' -f 2 | base64 -di | jq -r '.'

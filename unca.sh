@@ -10,3 +10,4 @@ rm -f dexidp/tls/*.pem
 rm -f ldap/tls/*.pem
 rm -f ldapadmin/tls/*.pem
 rm -f ldapssp/tls/*.pem
+rm -f ci/tls/*.pem

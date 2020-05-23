@@ -1,4 +1,4 @@
-issuer: https://___MACHINE_IP___:5556/dex
+issuer: ___ISSUER_URL___
 
 storage:
   type: postgres
@@ -46,6 +46,12 @@ staticClients:
   redirectURIs:
   - 'https://___MACHINE_IP___:8200/ui/vault/auth/oidc/oidc/callback'
   - 'http://localhost:8250/oidc/callback'
+- name: 'Concourse OIDC Authentication'
+  id: concourse
+  secret: concourse
+  #public: true
+  redirectURIs:
+  - 'https://___MACHINE_IP___:8081/sky/issuer/callback'
 
 expiry:
   signingKeys: "7h"

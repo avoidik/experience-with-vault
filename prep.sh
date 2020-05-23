@@ -4,7 +4,9 @@ eval "$(docker-machine env dex)"
 
 MACHINE_IP="$(docker-machine ip dex)"
 
-sed "s/___MACHINE_IP___/${MACHINE_IP}/g" dexidp/config.yaml.tpl > dexidp/config.yaml
+echo "ENV_CONCOURSE_URL=https://${MACHINE_IP}:8081" | tee ./.env
+echo "ENV_ISSUER_URL=https://${MACHINE_IP}:5556/dex" | tee -a ./.env
+echo "ENV_MACHINE_IP=${MACHINE_IP}" | tee -a ./.env
 
 docker-compose pull
-docker-compose build --no-cache --parallel
+docker-compose -f docker-compose.yaml -f docker-compose.ci.yaml build --no-cache

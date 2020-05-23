@@ -1,0 +1,108 @@
+version: "2"
+
+services:
+
+  concourse-web:
+    build: ci
+    restart: on-failure
+    command:
+      - web
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      CONCOURSE_BIND_PORT: "8080"
+      CONCOURSE_TLS_BIND_PORT: "8081"
+      CONCOURSE_EXTERNAL_URL: "${ENV_CONCOURSE_URL}"
+      CONCOURSE_TLS_CERT: "/ci/ca/ci-combined.pem"
+      CONCOURSE_TLS_KEY: "/ci/ca/ci-key.pem"
+      CONCOURSE_POSTGRES_HOST: "postgres"
+      CONCOURSE_POSTGRES_USER: "concourse"
+      CONCOURSE_POSTGRES_PASSWORD: "concourse"
+      CONCOURSE_POSTGRES_DATABASE: "concourse"
+      CONCOURSE_ADD_LOCAL_USER: "test:test"
+      CONCOURSE_MAIN_TEAM_LOCAL_USER: "test"
+      CONCOURSE_TSA_HOST_KEY: "/ci/web/tsa_host_key"
+      CONCOURSE_TSA_AUTHORIZED_KEYS: "/ci/web/authorized_worker_keys"
+      CONCOURSE_SESSION_SIGNING_KEY: "/ci/web/session_signing_key"
+      CONCOURSE_TSA_BIND_PORT: "2222"
+      CONCOURSE_VAULT_URL: "https://vault-server:8200"
+      CONCOURSE_VAULT_PATH_PREFIX: "/concourse"
+      CONCOURSE_VAULT_CA_CERT: "/ci/ca/ca.pem"
+      CONCOURSE_VAULT_AUTH_BACKEND: "cert"
+      CONCOURSE_VAULT_CLIENT_CERT: "/ci/ca/auth.pem"
+      CONCOURSE_VAULT_CLIENT_KEY: "/ci/ca/auth-key.pem"
+      CONCOURSE_VAULT_AUTH_BACKEND_MAX_TTL: "1h"
+      CONCOURSE_OIDC_DISPLAY_NAME: "DEX"
+      CONCOURSE_OIDC_ISSUER: "${ENV_ISSUER_URL}"
+      CONCOURSE_OIDC_CLIENT_ID: "concourse"
+      CONCOURSE_OIDC_CLIENT_SECRET: "concourse"
+      CONCOURSE_OIDC_CA_CERT: "/ci/ca/ca.pem"
+      CONCOURSE_MAIN_TEAM_OIDC_GROUP: "admins"
+      CONCOURSE_OIDC_USER_NAME_KEY: "email"
+      CONCOURSE_OIDC_GROUPS_KEY: "groups"
+      CONCOURSE_OIDC_SCOPE: "openid email profile groups"
+      CONCOURSE_LDAP_DISPLAY_NAME: "LDAP"
+      CONCOURSE_LDAP_HOST: "openldap:636"
+      CONCOURSE_LDAP_BIND_DN: "cn=readonly,dc=contoso,dc=com"
+      CONCOURSE_LDAP_BIND_PW: "readonly"
+      CONCOURSE_LDAP_CA_CERT: "/ci/ca/ca.pem"
+      CONCOURSE_LDAP_USER_SEARCH_BASE_DN: "ou=People,dc=contoso,dc=com"
+      CONCOURSE_LDAP_USER_SEARCH_FILTER: "(objectClass=person)"
+      CONCOURSE_LDAP_USER_SEARCH_USERNAME: "cn"
+      CONCOURSE_LDAP_USER_SEARCH_SCOPE: "one"
+      CONCOURSE_LDAP_USER_SEARCH_ID_ATTR: "DN"
+      CONCOURSE_LDAP_USER_SEARCH_EMAIL_ATTR: "mail"
+      CONCOURSE_LDAP_USER_SEARCH_NAME_ATTR: "cn"
+      CONCOURSE_LDAP_GROUP_SEARCH_BASE_DN: "ou=Groups,dc=contoso,dc=com"
+      CONCOURSE_LDAP_GROUP_SEARCH_FILTER: "(objectClass=groupOfUniqueNames)"
+      CONCOURSE_LDAP_GROUP_SEARCH_SCOPE: "one"
+      CONCOURSE_LDAP_GROUP_SEARCH_USER_ATTR: "DN"
+      CONCOURSE_LDAP_GROUP_SEARCH_GROUP_ATTR: "uniqueMember"
+      CONCOURSE_LDAP_GROUP_SEARCH_NAME_ATTR: "cn"
+      CONCOURSE_MAIN_TEAM_LDAP_GROUP: "admins"
+    depends_on:
+      - postgres
+      - vault-server
+
+  concourse-worker-a:
+    build: ci
+    restart: on-failure
+    privileged: true
+#    entrypoint:
+#      - /bin/sh
+#      - -c
+#    command:
+#      - |
+#        apt-get update
+#        apt-get -y install module-init-tools
+#        /usr/local/bin/dumb-init /usr/local/bin/concourse worker > /log 2>&1
+    command:
+      - worker
+    environment:
+      CONCOURSE_TSA_HOST: concourse-web:2222
+      CONCOURSE_TSA_PUBLIC_KEY: "/ci/worker_a/tsa_host_key.pub"
+      CONCOURSE_TSA_WORKER_PRIVATE_KEY: "/ci/worker_a/worker_key"
+    depends_on:
+      - concourse-web
+
+  concourse-worker-b:
+    build: ci
+    restart: on-failure
+    privileged: true
+#    entrypoint:
+#      - /bin/sh
+#      - -c
+#    command:
+#      - |
+#        apt-get update
+#        apt-get -y install module-init-tools
+#        /usr/local/bin/dumb-init /usr/local/bin/concourse worker > /log 2>&1
+    command:
+      - worker
+    environment:
+      CONCOURSE_TSA_HOST: concourse-web:2222
+      CONCOURSE_TSA_PUBLIC_KEY: "/ci/worker_b/tsa_host_key.pub"
+      CONCOURSE_TSA_WORKER_PRIVATE_KEY: "/ci/worker_b/worker_key"
+    depends_on:
+      - concourse-web

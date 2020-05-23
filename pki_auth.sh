@@ -3,7 +3,7 @@
 vault auth disable cert
 vault auth enable cert
 
-vault write auth/cert/certs/oidc-reader \
+vault write auth/cert/certs/oidc-reader-devops \
     policies=oidc-reader \
     certificate=@tls/ca-int-signed.pem \
     allowed_organizational_units='DevOps' \
@@ -15,4 +15,4 @@ vault login \
     -ca-cert=tls/ca.pem \
     -client-cert=tls/auth.pem \
     -client-key=tls/auth-key.pem \
-    name=oidc-reader
+    name=oidc-reader-devops

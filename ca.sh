@@ -107,6 +107,19 @@ cfssl gencert \
 fi
 
 #
+# ci
+#
+if [ ! -f tls/ci-key.pem ]; then
+cfssl gencert \
+  -ca=tls/ca.pem \
+  -ca-key=tls/ca-key.pem \
+  -config=tls/ca-config.json \
+  -profile=default \
+  -hostname="${MACHINE_IP},$(jq -r '.hosts | join(",")' tls/ci-csr.json)" \
+  tls/ci-csr.json | cfssljson -bare tls/ci
+fi
+
+#
 # pki auth
 #
 if [ ! -f tls/auth-key.pem ]; then
@@ -165,3 +178,13 @@ cp tls/ca.pem ldapadmin/tls/ca.pem
 # ldapssp container
 #
 cp tls/ca.pem ldapssp/tls/ca.pem
+
+#
+# ci
+#
+cat tls/ci.pem tls/ca.pem > tls/ci-combined.pem
+cp tls/ci-key.pem ci/tls/ci-key.pem
+cp tls/ci-combined.pem ci/tls/ci-combined.pem
+cp tls/ca.pem ci/tls/ca.pem
+cp tls/auth.pem ci/tls/auth.pem
+cp tls/auth-key.pem ci/tls/auth-key.pem

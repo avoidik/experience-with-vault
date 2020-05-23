@@ -7,5 +7,7 @@ dexidp/tls/*.pem
 ldap/tls/*.pem
 ldapadmin/tls/*.pem
 ldapssp/tls/*.pem
+ci/tls/*.pem
 init.json
 dexidp/config.yaml
+.env
